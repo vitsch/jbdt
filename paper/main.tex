@@ -47,17 +47,20 @@
 
 \begin{frontmatter}
 
-\title{WAIC Consistency, Posterior Concentration, and PAC-Bayes Sample Complexity
-       for Bayesian Decision Trees with Catalan-Exponential Prior}
+\title{Catalan-Exponential Priors for Bayesian Decision Trees:
+       WAIC Consistency, Posterior Concentration, and PAC-Bayes Guarantees}
 
-\runtitle{Bayesian Decision Trees with Catalan Prior}
+\runtitle{Catalan-Exponential Priors for Bayesian Decision Trees}
 
 \begin{aug}
-\author{\fnms{Vitaly} \snm{Schetinin}%
-  \ead[label=e1]{vitaly.schetinin@gmail.com}}
-\address{Institute of Research in Applicable Computing,
-         University of Bedfordshire, Luton, LU1~3JU, UK
-         \printead{e1}}
+\author{\fnms{Livija} \snm{Jakaite}%
+  \ead[label=e1]{Livija.L.Jakaite@beds.ac.uk}}
+\author{\fnms{Vitaly} \snm{Schetinin}\thanksref{t1}%
+  \ead[label=e2]{Vitaly.Schetinin@beds.ac.uk}}
+\address{School of Computing and Engineering,
+         University of Bedfordshire, UK.
+         \printead{e1,e2}}
+\thankstext{t1}{Corresponding author.}
 \end{aug}
 
 \begin{abstract}
@@ -803,13 +806,6 @@ models (e.g.\ Gaussian) would require different variance calculations in the WAI
 The PAC-Bayes bound \eqref{eq:pacbayes} is known to be vacuous for large models;
 for JBDT with $k \leq 5$ leaves and $N = 40$, the penalty term is $0.27$--$0.45$,
 which is non-trivial but smaller than the $0.5$ random-guessing baseline.
-
-% ============================================================
-\section*{Acknowledgements}
-% ============================================================
-
-The author thanks Julija Jakaite for the original JBDT implementation and
-the anonymous reviewers for their comments.
 
 % ============================================================
 \bibliographystyle{ba}

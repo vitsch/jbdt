@@ -37,29 +37,42 @@
 \pubyear{2026}\volume{00}\issue{0}\firstpage{1}\lastpage{1}
 \gdef\@runauthor{Author}\gdef\@runtitle{Short title}
 
-% ---- Author formatting ----
+% ---- Author name formatting ----
 \newcommand{\fnms}[1]{#1}
 \newcommand{\snm}[1]{\textsc{#1}}
 
 % \ead[label=key]{email}  or  \ead{email}
-% Stores email under key (stripping "label=" prefix) and prints it.
+% Stores email under key (stripping "label=" prefix) and prints it inline.
 \def\ead{\@ifnextchar[{\@ims@ead@keyed}{\@ims@ead@plain}}
 \def\@ims@ead@plain#1{\unskip\,(\texttt{#1})}
 \def\@ims@ead@keyed[#1]#2{%
   \@ims@store@email#1=\@nil{#2}%
   \unskip\,(\texttt{#2})%
 }
-% Parse "label=key=\@nil" or "key=\@nil" (fallback: treat whole as key)
+% Parse "label=key=\@nil" and store email under key
 \def\@ims@store@email label=#1=\@nil#2{%
   \expandafter\gdef\csname @ims@email@#1\endcsname{#2}%
 }
 
+% \printead{key} or \printead{key1,key2,...} — print stored emails
 \newcommand{\printead}[1]{%
-  \ifcsname @ims@email@#1\endcsname
-    \small\texttt{\csname @ims@email@#1\endcsname}%
-  \fi
+  \def\@ims@ead@list{#1}%
+  \def\@ims@printead@sep{}%
+  \@for\@ead@key:=\@ims@ead@list\do{%
+    \@ims@printead@sep
+    \ifcsname @ims@email@\@ead@key\endcsname
+      \small\texttt{\csname @ims@email@\@ead@key\endcsname}%
+    \fi
+    \def\@ims@printead@sep{,\ }%
+  }%
 }
+
 \newcommand{\affiliation}[1]{\textit{#1}}
+
+% ---- Thanks (corresponding author marker) ----
+\gdef\@ims@thankstext{}
+\newcommand{\thanksref}[1]{\textsuperscript{$*$}}
+\newcommand{\thankstext}[2]{\gdef\@ims@thankstext{#2}}
 
 % ---- Saved content for front matter ----
 \gdef\@ims@address{}
@@ -67,10 +80,15 @@
 
 \newcommand{\address}[1]{\gdef\@ims@address{#1}}
 
-% ---- aug environment: capture author line ----
+% ---- aug environment: accumulate multiple \author calls ----
 \newenvironment{aug}{%
-  % Redefine \author to save the argument for the title page
-  \def\author##1{\gdef\@ims@authorline{##1}}%
+  \gdef\@ims@authorline{}%
+  \gdef\@ims@authorsep{}%
+  \def\author##1{%
+    \g@addto@macro\@ims@authorline{\@ims@authorsep}%
+    \g@addto@macro\@ims@authorline{##1}%
+    \gdef\@ims@authorsep{\enspace\textbullet\enspace}%
+  }%
 }{%
 }
 
@@ -108,6 +126,8 @@
     \vskip1.5em
     {\large\@ims@authorline}\\[0.5em]
     {\small\@ims@address}%
+    \ifx\@ims@thankstext\@empty\else
+      \\[0.3em]{\small\itshape$^*$\@ims@thankstext}\fi
     \vskip1em
     \hrule
     \vskip1em
