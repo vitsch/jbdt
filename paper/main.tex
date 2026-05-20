@@ -66,7 +66,7 @@
 \begin{abstract}
 We develop theoretical foundations for Bayesian decision trees (BDTs) equipped
 with Dirichlet-Multinomial leaf models and a Catalan-exponential tree-size prior,
-as introduced by \citet{jakaite2025}.
+as introduced by \citet{schetinin2025}.
 Three main results are established.
 
 First, we prove that for any two DM-leaf models the WAIC deviance difference
@@ -76,7 +76,7 @@ with the leading constant $-4N/(N+\alpha_0)$ derived in closed form
 This implies a finite-sample selection formula
 $\Nmin \approx 5.41/\Delta$ (Theorem~\ref{thm:Nmin}),
 which quantitatively explains the empirical failure of WAIC-weighted BMA on
-the $N=40$ knee osteoarthritis dataset of \citet{jakaite2025}.
+the $N=40$ knee osteoarthritis dataset of \citet{schetinin2025}.
 
 Second, we characterise the Catalan-exponential prior by showing its tail
 decays at rate $(e^{-\gamma}/4)^{k_0}$---doubly faster than the Chipman
@@ -117,7 +117,7 @@ All results are verified by simulation.
 
 Bayesian decision trees combine the interpretability of recursive partitioning
 with principled uncertainty quantification via posterior inference over tree
-structure. The model of \citet{jakaite2025}, hereafter JBDT, places a
+structure. The model of \citet{schetinin2025}, hereafter JBDT, places a
 Catalan-exponential prior over the number of leaves $k$ of a binary decision
 tree with Dirichlet-Multinomial leaf models, and samples from the posterior via
 reversible-jump MCMC \citep{green1995}.
@@ -137,7 +137,7 @@ $O(N^{-1})$.
 From this we derive an explicit minimum-sample-size formula
 $\Nmin \approx 5.41/\Delta$, where $\Delta$ is the per-observation log-likelihood
 advantage of the true model.
-Applied to the \citet{jakaite2025} knee osteoarthritis (OA) dataset,
+Applied to the \citet{schetinin2025} knee osteoarthritis (OA) dataset,
 the formula gives $\Nmin \approx 40.4$ for the medial ROI---exactly equal to
 the available $N=40$ samples, explaining the empirical BMA failure observed there.
 
@@ -292,7 +292,7 @@ Birth proposals are \emph{rejected} if either child would contain fewer than
 $p_{\min}$ training points; no collapse occurs.
 For Change-Split and Change-Rule, let
 $n_0 = \#\{j \in L(T') : N_j < p_{\min}\}$ count underpopulated leaves after
-the proposal \citep{jakaite2025}:
+the proposal \citep{schetinin2025}:
 \begin{itemize}
   \item $n_0 = 0$: evaluate the MH ratio normally;
   \item $n_0 = 1$: \emph{collapse} the unique underpopulated sibling pair to
@@ -404,7 +404,7 @@ a $1.3\%$ correction.
 \end{proof}
 
 \paragraph{Application to knee OA dataset.}
-The WAIC values from \citet{jakaite2025} give per-observation advantages
+The WAIC values from \citet{schetinin2025} give per-observation advantages
 $\Delta = 0.182$ (lateral ROI) and $\Delta = 0.134$ (medial ROI),
 yielding $\Nmin = 29.7$ and $\Nmin = 40.4$ respectively.
 With $N=40$ available observations, the lateral ROI is above threshold
@@ -793,7 +793,7 @@ The WAIC gap theorem (Proposition~\ref{prop:gap}) extends immediately to
 multi-leaf trees with non-overlapping leaves, since the per-leaf contributions
 are independent given the partition.
 The oracle inequality (Theorem~\ref{thm:oracle}) extends to BMA over Zernike
-feature orders \citep{jakaite2025} by treating each Zernike configuration
+feature orders \citep{jakaite2021} by treating each Zernike configuration
 as a model family.
 The decision-theoretic analysis of Supplementary Appendix~C connects
 these results to asymmetric-loss classification, showing that DM-calibrated
