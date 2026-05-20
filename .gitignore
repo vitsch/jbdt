@@ -1,0 +1,34 @@
+# Medical imaging data — do not commit
+data/
+
+# Claude session notes
+c_sum_bdt_*.md
+c_pro_bdt.md
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+.venv/
+venv/
+
+# LaTeX build artefacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.pdf
+
+# Editor
+.vscode/
+*.swp
+*~
+.DS_Store

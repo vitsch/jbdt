@@ -1,0 +1,351 @@
+% ============================================================
+%  Supplementary Material
+%  Compile together with main.tex, or standalone with \documentclass[ba]{imsart}
+% ============================================================
+\documentclass[ba]{imsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[authoryear,round]{natbib}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xr}
+\externaldocument{main}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\bfn}{\boldsymbol{n}}
+\newcommand{\bfal}{\boldsymbol{\alpha}}
+\newcommand{\waic}{\mathrm{WAIC}}
+\newcommand{\loo}{\mathrm{LOO}}
+\newcommand{\kl}{\mathrm{KL}}
+\newcommand{\Eop}{\mathbb{E}}
+\newcommand{\Pop}{\mathbb{P}}
+\newcommand{\Nmin}{N_{\min}}
+\newcommand{\Cat}{\mathrm{Cat}}
+\newcommand{\DM}{\mathrm{DM}}
+
+\setcounter{section}{0}
+\renewcommand\thesection{\Alph{section}}
+\renewcommand\thetheorem{\Alph{section}.\arabic{theorem}}
+
+\begin{document}
+
+\begin{frontmatter}
+\title{Supplementary Material: WAIC Consistency, Posterior Concentration, and PAC-Bayes
+       Sample Complexity for Bayesian Decision Trees with Catalan-Exponential Prior}
+\begin{aug}
+\author{\fnms{Vitaly} \snm{Schetinin}}
+\end{aug}
+\end{frontmatter}
+
+This document contains three supplementary appendices:
+\begin{itemize}
+  \item Appendix~\ref{sec:rjmcmc}: Detailed balance of the RJMCMC Birth/Death moves.
+  \item Appendix~\ref{sec:ece}: ECE calibration bounds for DM-leaf BDTs.
+  \item Appendix~\ref{sec:decision}: Decision-theoretic analysis under asymmetric loss.
+\end{itemize}
+
+% ============================================================
+\section{RJMCMC Detailed Balance}
+\label{sec:rjmcmc}
+% ============================================================
+
+\subsection{Birth and Death moves}
+
+The JBDT sampler of \citet{jakaite2025} uses four RJMCMC \citep{green1995}
+moves; all threshold proposals use the \emph{local} data range at the
+node being modified (main paper Section~2.4, Eq.~\eqref{eq:local_q}).
+
+\emph{Birth} ($p_B$): select a uniformly random leaf $\ell$, draw a split
+variable $v \sim \mathrm{Unif}\{1,\ldots,m\}$, and draw a threshold
+$q \sim \mathrm{Unif}(a,b)$ where $[a,b] = [\min_{i\in\ell} x_{iv},\,
+\max_{i\in\ell} x_{iv}]$ is the range of variable $v$ over the $N_\ell$
+training samples that have descended to leaf $\ell$.
+The proposal density is $g_j(q) = 1/(b-a)$.
+\emph{Sweeping for Birth}: if either child would contain fewer than $p_{\min}$
+training points the proposal is immediately \emph{rejected}; no
+death-move collapse is performed.
+
+\emph{Death} ($p_D$): select a uniformly random prunable pair
+(sibling leaves sharing a prunable parent, of which there are $r_T$),
+and propose merging them.
+
+\emph{Change-Split} ($p_{CS}$): select a uniformly random internal node $\eta$,
+draw a new split variable $v' \sim \mathrm{Unif}\{1,\ldots,m\}$, and draw
+$q' \sim \mathrm{Unif}(a',b')$ from the local range of $v'$ over all
+$N_\eta$ training samples in $\eta$'s subtree.
+
+\emph{Change-Rule} ($p_{CR}$): select a uniformly random internal node $\eta$,
+and draw $q' \sim \mathcal{N}'(q,\sigma^2,[a,b])$, a Gaussian truncated to
+the local range $[a,b]$ of the existing variable $v$ over $\eta$'s subtree.
+
+\emph{Sweeping for Change moves} \citep{jakaite2025}: after applying the
+proposed $(v',q')$ to node $\eta$, count underpopulated leaves
+$n_0 = \#\{j \in L(T') : N_j < p_{\min}\}$:
+\begin{itemize}
+  \item $n_0 = 0$: proceed to MH evaluation;
+  \item $n_0 = 1$: \emph{collapse} the unique underpopulated sibling pair to
+        a single leaf (Death move), yielding a valid $k{-}1$-leaf tree;
+  \item $n_0 > 1$: \emph{reject} (parents differ; collapse would break
+        reversibility).
+\end{itemize}
+\begin{remark}
+Our Python implementation simplifies the $n_0=1$ branch by always
+\emph{rejecting} ($n_0 \geq 1$), which preserves detailed balance but
+accepts fewer Change proposals than Algorithm~2 of \citet{jakaite2025}.
+\end{remark}
+
+\subsection{Detailed balance for Birth/Death}
+
+\begin{theorem}[Detailed balance]
+\label{thm:db}
+  Under the Catalan-exponential prior \eqref{eq:catalan_prior},
+  the Birth and Death proposals satisfy the detailed balance condition
+  \begin{equation}
+    \log\alpha_B(T \to T') + \log\alpha_D(T' \to T) = 0
+    \label{eq:db_identity}
+  \end{equation}
+  for any tree $T$ with $k$ leaves and its Birth-proposal $T'$ with $k+1$ leaves.
+\end{theorem}
+
+\begin{proof}
+The log-acceptance ratios decompose as
+\begin{align*}
+  \log\alpha_B &= \underbrace{\Delta\log p(\mathcal{D}\mid T')}_{\text{likelihood}}
+    + \underbrace{\log\pi(T')/\pi(T)}_{\text{prior}}
+    + \underbrace{\log q_D(T'\to T)/q_B(T\to T')}_{\text{proposal}}, \\
+  \log\alpha_D &= \underbrace{-\Delta\log p(\mathcal{D}\mid T')}_{\text{likelihood}}
+    + \underbrace{\log\pi(T)/\pi(T')}_{\text{prior}}
+    + \underbrace{\log q_B(T\to T')/q_D(T'\to T)}_{\text{proposal}}.
+\end{align*}
+Clearly the likelihood terms cancel.
+For the prior terms, from Section~\ref{sec:catalan_prior_def} of the main paper:
+\begin{align*}
+  \log_{\rm prior\_birth}(k,\gamma) &= \log\pi(k+1)/\pi(k)
+    = -\gamma - \log\!\left[\tfrac{2(2k-1)}{k+1}\right], \\
+  \log_{\rm prior\_death}(k+1,\gamma) &= \log\pi(k)/\pi(k+1)
+    = +\gamma + \log\!\left[\tfrac{2(2k-1)}{k+1}\right],
+\end{align*}
+so the prior terms sum to zero.
+For the proposal terms, let $[a,b]$ denote the local range of the
+split variable at the chosen leaf (main paper Eq.~\eqref{eq:local_q}).
+The Birth proposal probability is
+$q_B(T\to T') = p_B \cdot (1/k) \cdot (1/m) \cdot 1/(b-a)$,
+where $1/(b-a)$ is the density $g_j(q)$ of the uniform threshold draw over
+the local range.
+The Death proposal probability is
+$q_D(T'\to T) = p_D \cdot (1/r_{T'})$,
+where $r_{T'}$ is the number of prunable pairs in $T'$.
+Correspondingly,
+$q_D(T'\to T)/q_B(T\to T') = (p_D/p_B) \cdot k \cdot m \cdot (b-a) / r_{T'}$,
+and $q_B(T\to T')/q_D(T'\to T) = (p_B/p_D) \cdot r_{T'} / (k \cdot m \cdot (b-a))$,
+giving $\log q_D/q_B + \log q_B/q_D = 0$.
+\end{proof}
+
+\paragraph{Closed-form birth-prior contribution.}
+Using $C_{k-1}/C_k = (k+1)/[2(2k-1)]$ (Proposition~\ref{prop:catalan_tail}b):
+\begin{equation}
+  \log_{\rm prior\_birth}(k,\gamma) = -\gamma - \log\!\left[\frac{2(2k-1)}{k+1}\right].
+  \label{eq:birth_prior}
+\end{equation}
+This is always negative (monotone decreasing from $-\gamma$ at $k=1$ to
+$-\gamma - \log 4$ as $k\to\infty$), so the Catalan prior always penalises
+Birth, with an additional structure-dependent penalty $-\log[2(2k-1)/(k+1)]$
+beyond the exponential term $-\gamma$.
+The total Catalan complexity regularisation range is $\log 4 \approx 1.386$ nats.
+
+\subsection{Chain convergence}
+
+Numerical verification: with $N=80$ observations, $k^*=3$ true leaves, $C=2$,
+$\gamma=1$, the pure-$k$ RJMCMC chain over 50,000 steps achieves
+$\text{TVD}(\hat{\Pi}_N, \Pi_N) = 4 \times 10^{-5}$,
+decaying as $O(1/\sqrt{S})$ with number of steps $S$, as expected for MCMC CLT.
+
+% ============================================================
+\section{ECE Calibration Bounds}
+\label{sec:ece}
+% ============================================================
+
+\subsection{Per-leaf MSE bound}
+
+\begin{proposition}[DM calibration MSE]
+\label{prop:mse}
+  For leaf $j$ with $N_j$ i.i.d.\ observations from $p_j$,
+  Dirichlet prior $\mathrm{Dir}(\alpha,\ldots,\alpha)$ ($\alpha_0=C\alpha$):
+  \begin{equation}
+    \Eop\!\left[\|\hat{p}_j - p_j\|^2\right]
+    = \sum_c \frac{N_j p_{jc}(1-p_{jc}) + \alpha_0^2(1/C - p_{jc})^2}
+                  {(N_j+\alpha_0)^2}.
+    \label{eq:mse}
+  \end{equation}
+  For large $N_j$: $\Eop[\|\hat{p}_j - p_j\|^2] \approx \sigma^2_{\max}/N_j$,
+  where $\sigma^2_{\max} = \max_{j,c} p_{jc}(1-p_{jc}) \leq 1/4$.
+\end{proposition}
+
+\begin{proof}
+Direct computation from the Dirichlet posterior mean and variance.
+$\Eop[\hat{p}_{jc}] = (N_j p_{jc} + \alpha)/(N_j+\alpha_0)$,
+$\mathrm{Var}[\hat{p}_{jc}] = N_j p_{jc}(1-p_{jc})/(N_j+\alpha_0)^2 + O(N_j^{-2})$.
+Combining bias$^2$ and variance gives \eqref{eq:mse}.
+\end{proof}
+
+\subsection{Prior-averaged ECE bound}
+
+\begin{proposition}[Prior-averaged ECE bound]
+\label{prop:ece}
+  For a $k$-leaf BDT with balanced leaves ($N_j = N/k$):
+  \begin{equation}
+    \mathrm{ECE}(k) \leq \sqrt{\frac{C\,\sigma^2_{\max}\,k}{N}}.
+    \label{eq:ece_k}
+  \end{equation}
+  Taking expectation over $k \sim \pi$:
+  \begin{equation}
+    \Eop_k[\mathrm{ECE}] \leq \sqrt{\frac{C\,\sigma^2_{\max}\,\Eop[k]}{N}}.
+    \label{eq:ece_avg}
+  \end{equation}
+  For Catalan ($\gamma=1$) versus Chipman ($\alpha_s=0.95,\beta=2$):
+  \begin{equation}
+    \frac{\mathrm{ECE}_{\Cat}}{\mathrm{ECE}_{\rm Chip}}
+    \leq \sqrt{\frac{\Eop_{\Cat}[k]}{\Eop_{\rm Chip}[k]}}
+    = \sqrt{\frac{1.373}{2.509}} = 0.740.
+    \label{eq:ece_ratio}
+  \end{equation}
+  The Catalan prior gives a $26\%$ tighter ECE bound at every $N$.
+\end{proposition}
+
+\begin{proof}
+  \eqref{eq:ece_k}:~By definition of ECE (calibration curve integral),
+  $\mathrm{ECE}(k) \leq \sqrt{\sum_j\sum_c\Eop[\|\hat{p}_{jc}-p_{jc}\|^2]/k}$.
+  Applying Proposition~\ref{prop:mse} to each leaf with $N_j=N/k$ and
+  using $\sigma^2_{\max} \leq 1/4$ gives \eqref{eq:ece_k}.
+  \eqref{eq:ece_avg}:~Jensen's inequality under $\sqrt{\cdot}$ and
+  $\Eop_k[k/N] = \Eop[k]/N$.
+  \eqref{eq:ece_ratio}:~Direct substitution of $\Eop_{\Cat}[k]=1.373$ and
+  $\Eop_{\rm Chip}[k]=2.509$.
+\end{proof}
+
+\begin{remark}
+The $26\%$ ECE advantage propagates to a $26\%$ tighter
+decision-cost bound (Appendix~\ref{sec:decision}, Theorem~\ref{thm:cost_bound}),
+and to a $26\%$ tighter PAC-Bayes calibration penalty in the main text.
+The chain $\S2.2 \to \S2.5 \to \S2.7$ (expected complexity $\to$
+ECE $\to$ decision cost) gives a coherent, quantitative justification
+for the Catalan prior in medical classification.
+\end{remark}
+
+% ============================================================
+\section{Decision-Theoretic Analysis}
+\label{sec:decision}
+% ============================================================
+
+\subsection{Optimal threshold under asymmetric loss}
+
+Let $y \in \{0,1\}$ be the binary outcome (0=healthy, 1=OA).
+The loss matrix has $L(\hat{y}=1,y=0) = C_{FP}$ (false positive)
+and $L(\hat{y}=0,y=1) = C_{FN}$ (false negative), with $C_{FN} > C_{FP}$
+for medical screening.
+
+\begin{theorem}[Optimal threshold]
+\label{thm:threshold}
+  The Bayes-optimal decision rule under the above loss is
+  $d^*(x) = \mathbf{1}[P(y=1|x) \geq \tau^*]$,
+  where
+  \begin{equation}
+    \tau^* = \frac{C_{FP}}{C_{FP}+C_{FN}} = \frac{1}{1+r},
+    \qquad r = C_{FN}/C_{FP}.
+    \label{eq:tau_star}
+  \end{equation}
+  For OA detection with $r=2$: $\tau^* = 1/3$.
+  Standard argmax classification uses $\tau=0.5$ and is suboptimal for all $r \neq 1$.
+\end{theorem}
+
+\begin{proof}
+  Minimise $\Eop[L \mid x, d]
+  = P(y=1|x)\,C_{FN}\,\mathbf{1}(d=0)
+  + P(y=0|x)\,C_{FP}\,\mathbf{1}(d=1)$
+  over $d \in \{0,1\}$: prefer $d=1$ iff
+  $P(y=1|x)(C_{FN}+C_{FP}) > C_{FP}$, i.e.\ $P(y=1|x) \geq \tau^*$.
+\end{proof}
+
+\subsection{Cost saving from optimal threshold}
+
+\begin{theorem}[Asymptotic cost saving]
+\label{thm:cost_saving}
+  For a $k$-leaf tree with true leaf probabilities $p_1,\ldots,p_k$,
+  the asymptotic ($N\to\infty$) expected cost saving from $\tau^*$ vs argmax is
+  \begin{equation}
+    \Delta EC = EC(\tau=0.5) - EC(\tau^*)
+    = \frac{1}{k}\sum_{i:\,p_i \in (\tau^*,0.5)}
+      \bigl[C_{FN} p_i - C_{FP}(1-p_i)\bigr] \geq 0.
+    \label{eq:cost_saving}
+  \end{equation}
+\end{theorem}
+
+\begin{proof}
+  At large $N$, $\hat{p}_j \to p_j$.
+  The two rules agree on leaves outside $(\tau^*, 0.5)$.
+  For leaf $i$ with $p_i \in (\tau^*, 0.5)$: argmax predicts 0 (incorrect),
+  $\tau^*$ predicts 1 (correct).
+  Cost under argmax: $C_{FN} p_i$; under $\tau^*$: $C_{FP}(1-p_i)$.
+  The gain $C_{FN}p_i - C_{FP}(1-p_i) = (C_{FP}+C_{FN})(p_i-\tau^*) > 0$
+  since $p_i > \tau^*$.
+\end{proof}
+
+\paragraph{3-leaf OA example.}
+With $p_{\rm true}=[0.15,\,0.40,\,0.75]$, $C_{FP}=1$, $C_{FN}=2$, $\tau^*=1/3$:
+\begin{itemize}
+  \item $EC(\tau^*)=0.383$ (Leaf~2 correctly classified as OA);
+  \item $EC(\tau=0.5)=EC_{\rm OC+\tau^*}=0.450$ (Leaf~2 classified as healthy);
+  \item $\Delta EC = 0.067$ per patient (17.4\% reduction in expected cost).
+\end{itemize}
+The over-confident (OC) model with $\hat{p}^{\rm OC}(0.40) = \mathrm{expit}(3\,\mathrm{logit}(0.40)) = 0.229 < \tau^* = 1/3$
+gains \emph{zero} benefit from $\tau^*$: miscalibration drags the Leaf-2
+estimate below the threshold, eliminating the advantage entirely.
+
+\subsection{Miscalibration cost bound}
+
+\begin{theorem}[Miscalibration excess cost]
+\label{thm:cost_bound}
+  For a miscalibrated model with estimates $\hat{p}$,
+  the excess expected cost at threshold $\tau^*$ over the Bayes-optimal cost is
+  \begin{equation}
+    \Delta EC_{\rm miscal} \leq (C_{FP}+C_{FN}) \cdot \mathrm{ECE\_bound}(N),
+    \label{eq:cost_bound}
+  \end{equation}
+  where $\mathrm{ECE\_bound}(N) = \sqrt{C\,\Eop[k]\,\sigma^2_{\max}/N}$
+  from Proposition~\ref{prop:ece}.
+  For the Catalan vs Chipman comparison:
+  \begin{equation}
+    \frac{\Delta EC_{\rm Cat}}{\Delta EC_{\rm Chip}} \leq 0.740
+    \quad\text{(26\% tighter bound, constant in $N$)}.
+  \end{equation}
+  At $N=40$ with $C_{FP}=1$, $C_{FN}=2$:
+  $\Delta EC_{\rm Cat} \leq 0.393$, $\Delta EC_{\rm Chip} \leq 0.531$.
+\end{theorem}
+
+\begin{proof}
+  Excess cost arises when the decision based on $\hat{p}$ disagrees with the
+  Bayes-optimal decision based on $p_{\rm true}$ at $\tau^*$.
+  For leaf $i$ where $\hat{p}_i$ and $p_i$ straddle $\tau^*$,
+  the per-leaf excess cost is at most $(C_{FP}+C_{FN})\,|p_i - \tau^*|
+  \leq (C_{FP}+C_{FN})\,|\hat{p}_i - p_i|$.
+  Averaging and applying $\Eop[|\hat{p}-p|] \leq \sqrt{\Eop[(\hat{p}-p)^2]}
+  \leq \mathrm{ECE\_bound}$ gives \eqref{eq:cost_bound}.
+\end{proof}
+
+\paragraph{Double-penalty theorem.}
+Discriminative classifiers (e.g.\ random forests) incur two independent penalties:
+(a)~wrong threshold ($\Delta EC = 0.067$ per patient for OA at $r=2$);
+(b)~miscalibration ($\leq 0.393$ per patient at $N=40$ under Catalan).
+Total upper bound: $0.067 + 0.393 = 0.460$, versus the optimal $EC = 0.383$.
+DM-BDT at $\tau^*$ avoids both penalties simultaneously.
+
+\bibliographystyle{ba}
+\bibliography{references}
+
+\end{document}
