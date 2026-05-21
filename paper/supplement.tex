@@ -8,8 +8,7 @@
 \RequirePackage[authoryear,round]{natbib}
 \RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
 \usepackage{booktabs}
-\usepackage{xr}
-\externaldocument{main}
+% xr package not used (cross-file \ref{} replaced with plain text per BA requirements)
 
 \startlocaldefs
 \theoremstyle{plain}
@@ -68,7 +67,7 @@ This document contains three supplementary appendices:
 
 The JBDT sampler of \citet{schetinin2025} uses four RJMCMC \citep{green1995}
 moves; all threshold proposals use the \emph{local} data range at the
-node being modified (main paper Section~2.4, Eq.~\eqref{eq:local_q}).
+node being modified (main paper Section~2.4).
 
 \emph{Birth} ($p_B$): select a uniformly random leaf $\ell$, draw a split
 variable $v \sim \mathrm{Unif}\{1,\ldots,m\}$, and draw a threshold
@@ -113,7 +112,7 @@ accepts fewer Change proposals than Algorithm~2 of \citet{schetinin2025}.
 
 \begin{theorem}[Detailed balance]
 \label{thm:db}
-  Under the Catalan-exponential prior \eqref{eq:catalan_prior},
+  Under the Catalan-exponential prior (main paper Section~2.3),
   the Birth and Death proposals satisfy the detailed balance condition
   \begin{equation}
     \log\alpha_B(T \to T') + \log\alpha_D(T' \to T) = 0
@@ -133,7 +132,7 @@ The log-acceptance ratios decompose as
     + \underbrace{\log q_B(T\to T')/q_D(T'\to T)}_{\text{proposal}}.
 \end{align*}
 Clearly the likelihood terms cancel.
-For the prior terms, from Section~\ref{sec:catalan_prior_def} of the main paper:
+For the prior terms, from Section~2.3 of the main paper:
 \begin{align*}
   \log_{\rm prior\_birth}(k,\gamma) &= \log\pi(k+1)/\pi(k)
     = -\gamma - \log\!\left[\tfrac{2(2k-1)}{k+1}\right], \\
@@ -142,7 +141,7 @@ For the prior terms, from Section~\ref{sec:catalan_prior_def} of the main paper:
 \end{align*}
 so the prior terms sum to zero.
 For the proposal terms, let $[a,b]$ denote the local range of the
-split variable at the chosen leaf (main paper Eq.~\eqref{eq:local_q}).
+split variable at the chosen leaf (main paper Section~2.4).
 The Birth proposal probability is
 $q_B(T\to T') = p_B \cdot (1/k) \cdot (1/m) \cdot 1/(b-a)$,
 where $1/(b-a)$ is the density $g_j(q)$ of the uniform threshold draw over
@@ -157,7 +156,7 @@ giving $\log q_D/q_B + \log q_B/q_D = 0$.
 \end{proof}
 
 \paragraph{Closed-form birth-prior contribution.}
-Using $C_{k-1}/C_k = (k+1)/[2(2k-1)]$ (Proposition~\ref{prop:catalan_tail}b):
+Using $C_{k-1}/C_k = (k+1)/[2(2k-1)]$ (Proposition~4.1(b) of the main paper):
 \begin{equation}
   \log_{\rm prior\_birth}(k,\gamma) = -\gamma - \log\!\left[\frac{2(2k-1)}{k+1}\right].
   \label{eq:birth_prior}
