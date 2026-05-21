@@ -1,15 +1,17 @@
 % ============================================================
-%  Supplementary Material
-%  Compile together with main.tex, or standalone with \documentclass[ba]{imsart}
+%  Supplementary Material — official imsart template
+%  Compile: pdflatex supplement && bibtex supplement && pdflatex supplement && pdflatex supplement
 % ============================================================
-\documentclass[ba]{imsart}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage[authoryear,round]{natbib}
+\documentclass[ba,preprint]{imsart}
+
+\RequirePackage{amsthm,amsmath,amsfonts,amssymb}
+\RequirePackage[authoryear,round]{natbib}
+\RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
 \usepackage{booktabs}
-\usepackage{hyperref}
 \usepackage{xr}
 \externaldocument{main}
 
+\startlocaldefs
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -28,6 +30,7 @@
 \newcommand{\Nmin}{N_{\min}}
 \newcommand{\Cat}{\mathrm{Cat}}
 \newcommand{\DM}{\mathrm{DM}}
+\endlocaldefs
 
 \setcounter{section}{0}
 \renewcommand\thesection{\Alph{section}}
@@ -39,14 +42,13 @@
 \title{Supplementary Material: Catalan-Exponential Priors for Bayesian Decision Trees:
        WAIC Consistency, Posterior Concentration, and PAC-Bayes Guarantees}
 \begin{aug}
-\author{\fnms{Livija} \snm{Jakaite}%
-  \ead[label=e1]{Livija.L.Jakaite@beds.ac.uk}}
-\author{\fnms{Vitaly} \snm{Schetinin}\thanksref{t1}%
-  \ead[label=e2]{Vitaly.Schetinin@beds.ac.uk}}
-\address{School of Computing and Engineering,
-         University of Bedfordshire, UK.
-         \printead{e1,e2}}
+\author[A]{\fnms{Livija}~\snm{Jakaite}\ead[label=e1]{Livija.L.Jakaite@beds.ac.uk}},
+\author[A]{\fnms{Vitaly}~\snm{Schetinin}\thanksref{t1}\ead[label=e2]{Vitaly.Schetinin@beds.ac.uk}}
+\address[A]{School of Computing and Engineering,
+            University of Bedfordshire, Luton, UK%
+            \printead[presep={,\ }]{e1,e2}}
 \thankstext{t1}{Corresponding author.}
+\runauthor{L. Jakaite and V. Schetinin}
 \end{aug}
 \end{frontmatter}
 

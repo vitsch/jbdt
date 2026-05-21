@@ -1,149 +1,157 @@
-%% imsart.cls  —  MINIMAL LOCAL STUB for offline compilation
-%% Replace with the official version from https://www.e-publications.org/ims/support/imsart.html
-%% before submission to Bayesian Analysis.
+%% This is file `imsart.cls'
+%%
+%% LaTeX 2e class file for the processing of LaTeX2e files
+%% of the following IMS/BS journals:
+%%
+%%   The Annals of Probability
+%%   The Annals of Applied Probability
+%%   The Annals of Statistics
+%%   The Annals of Applied Statistics
+%%   Statistical Science
+%%   Probability Surveys
+%%   Statistics Surveys
+%%   Electronic Journal of Statistics
+%%   Bernoulli
+%%   Annales de l'Institut Henri Poincar\'e - Probabilit\'es et Statistiques
+%%   Brazilian Journal of Probability and Statistics
+%%   Bayesian Analysis
+%%
+%%   Institute of Mathematical Statistics, U.S.A.
+%%   Bernoulli Society
+%%   Institut Henry Poincare
+%%   Brazilian Statistical Association
+%%   International Society for Bayesian Analysis
+%%   
+%% Macros written by Vytas Statulevicius, VTeX, Lithuania
+%% Maintained by Deimantas Galcius, VTeX, Lithuania
+%% for Institute of Mathematical Statistics, U.S.A.
+%% Please submit bugs or your comments to latex-support@vtex.lt
+%%
+%% The original distribution is located at:
+%% http://www.e-publications.org/ims/support
+%%
+%% This class file loads standard "article.cls" with appropriate 
+%% settings and then style file "imsart.sty" with additional macros
+%%
+%% You are free to use this style file as you see fit, provided 
+%% that you do not make changes to the file. 
+%% If you DO make changes, you are required to rename this file.
+%%
+%% It may be distributed under the terms of the LaTeX Project Public
+%% License, as described in lppl.txt in the base LaTeX distribution.
+%% Either version 1.0 or, at your option, any later version.
+%%
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%%
+%%
+%% Bug fixes and changes: at end of file
+% 
+% TeX programming: Vytas Statulevicius, VTeX, Lithuania.
+% TeX programming: Deimantas Galcius, VTeX, Lithuania.
+% TeX programming: Edgaras Sakuras, VTeX, Lithuania.
+% Requires Latex2e, ver.2000.06
+% 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{imsart}[2026/05/20 IMS article class (local stub)]
-
-\DeclareOption{ba}{}
-\DeclareOption{ejs}{}
-\DeclareOption{aos}{}
-\DeclareOption*{}
-\ProcessOptions\relax
-
-\LoadClass[12pt,a4paper]{article}
-
-\RequirePackage{amsmath,amssymb,amsthm}
-\RequirePackage{geometry}
-\geometry{margin=3cm, top=3.5cm, bottom=3.5cm}
-\RequirePackage{setspace}
-\doublespacing
-\RequirePackage{fancyhdr}
-
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[R]{\thepage}
-\fancyhead[L]{\footnotesize\@runtitle}
-\renewcommand{\headrulewidth}{0.4pt}
-\setlength{\headheight}{15pt}
-
-% ---- Metadata ----
-\newcommand{\pubyear}[1]{\gdef\@pubyear{#1}}
-\newcommand{\volume}[1]{\gdef\@volume{#1}}
-\newcommand{\issue}[1]{\gdef\@issue{#1}}
-\newcommand{\firstpage}[1]{\gdef\@firstpage{#1}}
-\newcommand{\lastpage}[1]{\gdef\@lastpage{#1}}
-\newcommand{\runauthor}[1]{\gdef\@runauthor{#1}}
-\newcommand{\runtitle}[1]{\gdef\@runtitle{#1}}
-\pubyear{2026}\volume{00}\issue{0}\firstpage{1}\lastpage{1}
-\gdef\@runauthor{Author}\gdef\@runtitle{Short title}
-
-% ---- Author name formatting ----
-\newcommand{\fnms}[1]{#1}
-\newcommand{\snm}[1]{\textsc{#1}}
-
-% \ead[label=key]{email}  or  \ead{email}
-% Stores email under key (stripping "label=" prefix) and prints it inline.
-\def\ead{\@ifnextchar[{\@ims@ead@keyed}{\@ims@ead@plain}}
-\def\@ims@ead@plain#1{\unskip\,(\texttt{#1})}
-\def\@ims@ead@keyed[#1]#2{%
-  \@ims@store@email#1=\@nil{#2}%
-  \unskip\,(\texttt{#2})%
-}
-% Parse "label=key=\@nil" and store email under key
-\def\@ims@store@email label=#1=\@nil#2{%
-  \expandafter\gdef\csname @ims@email@#1\endcsname{#2}%
-}
-
-% \printead{key} or \printead{key1,key2,...} — print stored emails
-\newcommand{\printead}[1]{%
-  \def\@ims@ead@list{#1}%
-  \def\@ims@printead@sep{}%
-  \@for\@ead@key:=\@ims@ead@list\do{%
-    \@ims@printead@sep
-    \ifcsname @ims@email@\@ead@key\endcsname
-      \small\texttt{\csname @ims@email@\@ead@key\endcsname}%
-    \fi
-    \def\@ims@printead@sep{,\ }%
-  }%
-}
-
-\newcommand{\affiliation}[1]{\textit{#1}}
-
-% ---- Thanks (corresponding author marker) ----
-\gdef\@ims@thankstext{}
-\newcommand{\thanksref}[1]{\textsuperscript{$*$}}
-\newcommand{\thankstext}[2]{\gdef\@ims@thankstext{#2}}
-
-% ---- Saved content for front matter ----
-\gdef\@ims@address{}
-\gdef\@ims@authorline{}
-
-\newcommand{\address}[1]{\gdef\@ims@address{#1}}
-
-% ---- aug environment: accumulate multiple \author calls ----
-\newenvironment{aug}{%
-  \gdef\@ims@authorline{}%
-  \gdef\@ims@authorsep{}%
-  \def\author##1{%
-    \g@addto@macro\@ims@authorline{\@ims@authorsep}%
-    \g@addto@macro\@ims@authorline{##1}%
-    \gdef\@ims@authorsep{\enspace\textbullet\enspace}%
-  }%
-}{%
-}
-
-% ---- abstract environment ----
-\newbox\@ims@absbox
-\renewenvironment{abstract}{%
-  \global\setbox\@ims@absbox\vbox\bgroup
-  \noindent{\small\textbf{Abstract.}\enspace}\small\ignorespaces
-}{%
-  \egroup
-}
-
-% ---- keyword environment ----
-\newbox\@ims@kwdbox
-\newenvironment{keyword}{%
-  \global\setbox\@ims@kwdbox\vbox\bgroup
-  \noindent{\small\textbf{Keywords:}\enspace}\small\ignorespaces
-}{%
-  \egroup
-}
-\newcommand{\kwd}[1]{#1;\space}
-
-% ---- frontmatter environment ----
-\newenvironment{frontmatter}{%
-  \begingroup
-}{%
-  \@ims@makefront
-  \endgroup
-}
-
-\newcommand{\@ims@makefront}{%
-  \thispagestyle{plain}
-  \begin{center}
-    {\LARGE\bfseries\@title\par}%
-    \vskip1.5em
-    {\large\@ims@authorline}\\[0.5em]
-    {\small\@ims@address}%
-    \ifx\@ims@thankstext\@empty\else
-      \\[0.3em]{\small\itshape$^*$\@ims@thankstext}\fi
-    \vskip1em
-    \hrule
-    \vskip1em
-  \end{center}
-  \ifvoid\@ims@absbox\else\noindent\box\@ims@absbox\fi
-  \vskip0.5em
-  \ifvoid\@ims@kwdbox\else\noindent\box\@ims@kwdbox\fi
-  \vskip1.5em
-  \hrule
-  \vskip2em
-}
-
-% ---- Bibliography style ----
-\AtBeginDocument{%
-  \IfFileExists{ba.bst}{}{%
-    \let\@ims@bstyle\bibliographystyle
-    \renewcommand\bibliographystyle[1]{\@ims@bstyle{plainnat}}%
-  }%
-}
+\ProvidesClass{imsart}[2025/03/18 driver class for package imsart.sty]
+% 
+% set various options for different journals:
+\DeclareOption{ps}{%
+    \PassOptionsToClass{10pt,twoside}{article}%
+    }
+% 
+\DeclareOption{ss}{%
+    \PassOptionsToClass{10pt,twoside}{article}%
+    }
+% 
+\DeclareOption{ejs}{%
+    \PassOptionsToClass{10pt,twoside}{article}%
+    }
+\DeclareOption{ejsv2}{%
+    \PassOptionsToPackage{nosetpagesize}{graphicx}%
+    \PassOptionsToPackage{setpagesize=false}{hyperref}%
+    \PassOptionsToClass{10pt,twoside}{article}%
+    }
+% 
+\DeclareOption{aap}{%
+    \PassOptionsToClass{11pt,oneside,leqno}{article}%
+    \PassOptionsToPackage{leqno}{amsmath}%
+    }
+% 
+\DeclareOption{aop}{%
+    \PassOptionsToClass{11pt,oneside,leqno}{article}%
+    \PassOptionsToPackage{leqno}{amsmath}%
+    }
+% 
+\DeclareOption{aos}{%
+    \PassOptionsToClass{11pt,oneside,leqno}{article}%
+    \PassOptionsToPackage{leqno}{amsmath}%
+    }
+% 
+\DeclareOption{aoas}{%
+    \PassOptionsToClass{11pt,oneside,leqno}{article}%
+    \PassOptionsToPackage{leqno}{amsmath}%
+    }
+% 
+\DeclareOption{sts}{%
+    \PassOptionsToClass{11pt,oneside,leqno}{article}%
+    \PassOptionsToPackage{leqno}{amsmath}%
+    }
+% 
+\DeclareOption{bj}{%
+    \PassOptionsToClass{10pt,oneside}{article}%
+    \g@addto@macro\@classoptionslist{,nosetpagesize}%
+    }
+% 
+\DeclareOption{aihp}{%
+    \PassOptionsToClass{10pt,oneside,leqno}{article}%
+    \PassOptionsToPackage{leqno}{amsmath}%
+    \PassOptionsToPackage{numbers,sort&compress}{natbib}%
+    }
+% 
+\DeclareOption{bjps}{%
+    \PassOptionsToClass{11pt,twoside}{article}%
+    }
+% 
+\DeclareOption{ba}{%
+    \PassOptionsToClass{10pt,oneside}{article}%
+    }
+% 
+\PassOptionsToPackage{cmex10}{amsmath}
+% 
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\ProcessOptions*
+% 
+\LoadClass{article}
+% 
+\IfFileExists{imsart.sty}%
+    {}%
+    {%
+        \ClassError{imsart}%
+            {The complimentary style file "imsart.sty" is required}%
+            {%
+                The complimentary style file "imsart.sty" is required\MessageBreak
+                You need to install file "imsart.sty" in your system\MessageBreak
+                File could be downloaded from http://www.e-publications.org/ims/support
+            }%
+    }
+% 
+% Load additional macros and modifications for "article.cls"
+\RequirePackage{imsart}
+% 
+\endinput
+%%
+%% End of file `imsart.cls'.

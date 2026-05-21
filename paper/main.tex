@@ -1,20 +1,22 @@
 % ============================================================
-%  Bayesian Analysis submission
-%  Download imsart.cls from: https://www.e-publications.org/ims/support/imsart.html
+%  Bayesian Analysis submission — official imsart template
 %  Compile: pdflatex main && bibtex main && pdflatex main && pdflatex main
 % ============================================================
 \documentclass[ba]{imsart}
-% Fallback (comment out the line above and uncomment these two if imsart.cls is missing):
-% \documentclass[12pt]{article}
-% \usepackage{imsart-fallback}  % see README.md
 
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage[authoryear,round]{natbib}
+\RequirePackage{amsthm,amsmath,amsfonts,amssymb}
+\RequirePackage[authoryear,round]{natbib}
+\RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
 \usepackage{booktabs}
-\usepackage{hyperref}
 \usepackage{microtype}
-\usepackage{xcolor}
 
+\pubyear{2025}
+\volume{TBA}
+\issue{TBA}
+\firstpage{1}
+\lastpage{1}
+
+\startlocaldefs
 % ---- theorem environments ----
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
@@ -42,6 +44,7 @@
 \newcommand{\reff}{r_{\mathrm{eff}}}
 \newcommand{\Rbma}{R_{\mathrm{BMA}}}
 \newcommand{\Rora}{R_{k^*}}
+\endlocaldefs
 
 \begin{document}
 
@@ -53,14 +56,13 @@
 \runtitle{Catalan-Exponential Priors for Bayesian Decision Trees}
 
 \begin{aug}
-\author{\fnms{Livija} \snm{Jakaite}%
-  \ead[label=e1]{Livija.L.Jakaite@beds.ac.uk}}
-\author{\fnms{Vitaly} \snm{Schetinin}\thanksref{t1}%
-  \ead[label=e2]{Vitaly.Schetinin@beds.ac.uk}}
-\address{School of Computing and Engineering,
-         University of Bedfordshire, UK.
-         \printead{e1,e2}}
+\author[A]{\fnms{Livija}~\snm{Jakaite}\ead[label=e1]{Livija.L.Jakaite@beds.ac.uk}},
+\author[A]{\fnms{Vitaly}~\snm{Schetinin}\thanksref{t1}\ead[label=e2]{Vitaly.Schetinin@beds.ac.uk}}
+\address[A]{School of Computing and Engineering,
+            University of Bedfordshire, Luton, UK%
+            \printead[presep={,\ }]{e1,e2}}
 \thankstext{t1}{Corresponding author.}
+\runauthor{L. Jakaite and V. Schetinin}
 \end{aug}
 
 \begin{abstract}
@@ -94,6 +96,13 @@ $8.1\times$ smaller than Chipman for sparse true models ($k^*=1$)
 (Theorem~\ref{thm:pacbayes}).
 All results are verified by simulation.
 \end{abstract}
+
+\begin{keyword}[class=MSC]
+\kwd[Primary ]{62F15}
+\kwd[; secondary ]{68T05}
+\kwd{62C10}
+\kwd{62C12}
+\end{keyword}
 
 \begin{keyword}
 \kwd{Bayesian decision trees}
