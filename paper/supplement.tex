@@ -36,10 +36,17 @@
 \begin{document}
 
 \begin{frontmatter}
-\title{Supplementary Material: WAIC Consistency, Posterior Concentration, and PAC-Bayes
-       Sample Complexity for Bayesian Decision Trees with Catalan-Exponential Prior}
+\title{Supplementary Material: Catalan-Exponential Priors for Bayesian Decision Trees:
+       WAIC Consistency, Posterior Concentration, and PAC-Bayes Guarantees}
 \begin{aug}
-\author{\fnms{Vitaly} \snm{Schetinin}}
+\author{\fnms{Livija} \snm{Jakaite}%
+  \ead[label=e1]{Livija.L.Jakaite@beds.ac.uk}}
+\author{\fnms{Vitaly} \snm{Schetinin}\thanksref{t1}%
+  \ead[label=e2]{Vitaly.Schetinin@beds.ac.uk}}
+\address{School of Computing and Engineering,
+         University of Bedfordshire, UK.
+         \printead{e1,e2}}
+\thankstext{t1}{Corresponding author.}
 \end{aug}
 \end{frontmatter}
 
@@ -57,7 +64,7 @@ This document contains three supplementary appendices:
 
 \subsection{Birth and Death moves}
 
-The JBDT sampler of \citet{jakaite2025} uses four RJMCMC \citep{green1995}
+The JBDT sampler of \citet{schetinin2025} uses four RJMCMC \citep{green1995}
 moves; all threshold proposals use the \emph{local} data range at the
 node being modified (main paper Section~2.4, Eq.~\eqref{eq:local_q}).
 
@@ -84,7 +91,7 @@ $N_\eta$ training samples in $\eta$'s subtree.
 and draw $q' \sim \mathcal{N}'(q,\sigma^2,[a,b])$, a Gaussian truncated to
 the local range $[a,b]$ of the existing variable $v$ over $\eta$'s subtree.
 
-\emph{Sweeping for Change moves} \citep{jakaite2025}: after applying the
+\emph{Sweeping for Change moves} \citep{schetinin2025}: after applying the
 proposed $(v',q')$ to node $\eta$, count underpopulated leaves
 $n_0 = \#\{j \in L(T') : N_j < p_{\min}\}$:
 \begin{itemize}
@@ -97,7 +104,7 @@ $n_0 = \#\{j \in L(T') : N_j < p_{\min}\}$:
 \begin{remark}
 Our Python implementation simplifies the $n_0=1$ branch by always
 \emph{rejecting} ($n_0 \geq 1$), which preserves detailed balance but
-accepts fewer Change proposals than Algorithm~2 of \citet{jakaite2025}.
+accepts fewer Change proposals than Algorithm~2 of \citet{schetinin2025}.
 \end{remark}
 
 \subsection{Detailed balance for Birth/Death}

@@ -1,39 +1,30 @@
-\documentclass[12pt]{letter}
+\documentclass[12pt,a4paper]{article}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
 \usepackage{hyperref}
-
-\signature{Vitaly Schetinin\\
-  School of Computing and Engineering\\
-  University of Bedfordshire, UK\\
-  \texttt{Vitaly.Schetinin@beds.ac.uk} (corresponding author)}
-
-\address{%
-  Livija Jakaite and Vitaly Schetinin\\
-  School of Computing and Engineering\\
-  University of Bedfordshire\\
-  Luton, UK\\[0.5em]
-  \today
-}
+\usepackage{parskip}
+\pagestyle{empty}
 
 \begin{document}
-\begin{letter}{%
-  Editor-in-Chief\\
-  \textit{Bayesian Analysis}\\
-  International Society for Bayesian Analysis}
 
-\opening{Dear Editor,}
+\noindent
+Editor-in-Chief\\
+\textit{Bayesian Analysis}
 
+\bigskip
+\noindent Dear Editor,
+
+\medskip
 We are pleased to submit the manuscript
 
 \begin{quote}
-\textbf{``Catalan-Exponential Priors for Bayesian Decision Trees:
+{``Catalan-Exponential Priors for Bayesian Decision Trees:
 WAIC Consistency, Posterior Concentration, and PAC-Bayes Guarantees''}
 \end{quote}
 
 for consideration for publication in \textit{Bayesian Analysis}.
 
-\medskip\noindent\textbf{Summary of contributions.}\quad
+\medskip\noindent\textit{Summary of contributions.}\quad
 This paper develops the theoretical foundations of the Bayesian decision tree classifier
 that uses a Catalan-exponential tree-size prior and Dirichlet-Multinomial
 leaf models with RJMCMC inference.
@@ -41,22 +32,22 @@ We prove four main results that collectively provide a complete theoretical
 justification for the model design and explain previously unexplained empirical findings:
 
 \begin{enumerate}
-\item \textbf{WAIC-LOO gap theorem}: The WAIC and LOO deviances agree
+\item \textit{WAIC-LOO gap theorem}: The WAIC and LOO deviances agree
   up to the constant $-4N/(N+\alpha_0)+O(N^{-1})$, proved in closed form.
   This yields the practical design criterion $N_{\min} \approx 5.41/\Delta$,
   which predicts the exact sample size at which WAIC-weighted BMA
   becomes reliable.
 
-\item \textbf{Catalan prior tail bound}: $P(k \geq k_0) \leq C_\gamma\,(e^{-\gamma}/4)^{k_0}$,
+\item \textit{Catalan prior tail bound}: $P(k \geq k_0) \leq C_\gamma\,(e^{-\gamma}/4)^{k_0}$,
   with universal effective decay rate $r_{\rm eff} = 1.228\,e^{-\gamma}/4$.
   Posterior concentration on the true complexity $k^*$ is achieved at $N=300$
   (Catalan) versus $N>800$ (Chipman 1998).
 
-\item \textbf{BMA oracle inequality}: $R_{\rm BMA}-R_{k^*} \leq \Delta_{\rm Jensen}
+\item \textit{BMA oracle inequality}: $R_{\rm BMA}-R_{k^*} \leq \Delta_{\rm Jensen}
   = O(\exp(-N\Delta_{\rm WAIC}/2))$.
   Excess risk decreases 56-fold from $N=20$ to $N=800$, following $O(1/N)$.
 
-\item \textbf{PAC-Bayes sample complexity}: Under the oracle posterior,
+\item \textit{PAC-Bayes sample complexity}: Under the oracle posterior,
   the Catalan prior requires $8.1\times$ fewer samples than Chipman for
   sparse true models ($k^*=1$), directly explaining its advantage in
   small-$N$ medical imaging.
@@ -67,7 +58,7 @@ and decision-theoretic analysis connecting the above to asymmetric-loss classifi
 All results are accompanied by numerical verification on both synthetic and
 real knee osteoarthritis data.
 
-\medskip\noindent\textbf{Fit for Bayesian Analysis.}\quad
+\medskip\noindent\textit{Fit for Bayesian Analysis.}\quad
 The paper is squarely within the scope of \textit{Bayesian Analysis}:
 it develops methodology for Bayesian model selection (WAIC) and BMA,
 analyses a novel prior construction (Catalan-exponential) analytically,
@@ -75,24 +66,29 @@ and provides PAC-Bayesian guarantees.
 The application to medical imaging provides concrete motivation but the
 theoretical results are model-agnostic within the DM-leaf class.
 
-\medskip\noindent\textbf{Suggested associate editors / reviewers.}\quad
+\medskip\noindent\textit{Suggested associate editors / reviewers.}\quad
 Given the combination of Bayesian nonparametric trees, model selection,
 and PAC-Bayes bounds, we would suggest reviewers with expertise in
 Bayesian model selection, decision trees, or PAC-Bayesian theory.
 
-\medskip\noindent\textbf{Declaration.}\quad
+\medskip\noindent\textit{Declaration.}\quad
 The manuscript is original, has not been published, and is not under
 consideration elsewhere.
 There are no conflicts of interest.
-The paper is \textbf{not anonymised} in this version; please advise if
+The paper is \textit{not anonymised} in this version; please advise if
 double-blind anonymisation is required for the current submission round.
 
-\medskip\noindent\textbf{Code availability.}\quad
+\medskip\noindent\textit{Code availability.}\quad
 All experiments are fully reproducible.
 Code and pre-computed results are publicly available at
 \url{https://github.com/vitsch/jbdt}.
 
-\closing{Yours sincerely,}
+\bigskip
+\noindent Yours sincerely,
 
-\end{letter}
+\bigskip\bigskip
+\noindent
+Livija Jakaite and Vitaly Schetinin\\
+\texttt{Vitaly.Schetinin@beds.ac.uk} (corresponding author)
+
 \end{document}

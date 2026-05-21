@@ -726,10 +726,9 @@ Random seeds are fixed ($\texttt{seed}=42$).
 We simulate single-leaf DM observations with $C=2$, $\alpha_0=1$,
 $p_{\rm true}=(0.5,0.5)$, varying $N \in \{10,20,40,80,160,320,640,1280\}$,
 with 500 replicates.
-Figure~\ref{fig:waic_gap} (top) shows the total gap
-$\waic_{\rm dev} - \loo_{\rm dev}$ converging to $-4$ as $N\to\infty$,
+The simulated total gap $\waic_{\rm dev} - \loo_{\rm dev}$ converges to $-4$ as $N\to\infty$,
 closely tracking the formula $-4N/(N+\alpha_0)$ (maximum deviation $0.03$).
-The per-observation gap (bottom) follows the $1/N$ decay.
+The per-observation gap follows the $1/N$ decay.
 
 \subsection{Experiment B: Posterior concentration}
 
@@ -756,9 +755,8 @@ $N \geq \Nmin(k^*=3) \approx 5.41/\Delta$ with $\Delta \approx 0.01$.
 
 \subsection{Experiment E: PAC-Bayes penalties}
 
-Figure~\ref{fig:pacbayes} (omitted; available in the supplementary code)
-plots the PAC-Bayes complexity penalty versus $N$ for $k^*=1,2,3$
-under Catalan and Chipman.
+The PAC-Bayes complexity penalty versus $N$ for $k^*=1,2,3$
+under Catalan and Chipman (numerical output available in the supplementary code)
 At all $N$, the Catalan penalty for $k^*=1$ is $14$--$17\%$ lower than Chipman,
 while Chipman is $10\%$ lower for $k^*=3$---consistent with the $\Nmin$ ratios
 in Table~\ref{tab:pacbayes}.
